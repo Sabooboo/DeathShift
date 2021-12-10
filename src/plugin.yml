@@ -1,0 +1,22 @@
+name: DeathShift
+version: 1.0.0
+author: Sab
+main: com.sab.deathshift.DeathShift
+api-version: 1.14
+
+commands:
+  join:
+    description: Enters you into the next game of DeathShift.
+    usage: /<command>
+  leave:
+    description: Leaves any ongoing game of DeathShift.
+    usage: /<command>
+  ready:
+    description: Ready up for your current game of DeathShift
+    usage: /<command>
+  unready:
+    description: Unready up for your current game of DeathShift
+    usage: /<command>
+  playing:
+    description: Shows who is currently in a DeathGame lobby
+    usage: /<command>
