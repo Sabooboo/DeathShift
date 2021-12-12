@@ -6,7 +6,8 @@ import org.bukkit.entity.Player
 import java.lang.Error
 
 class PlayerManager(val player: Player) {
-    var destination: Location? = LocationTools.generateRandomLocation()
+
+    var destination: Location = LocationTools.generateRandomLocation()
     var ready: Boolean = false
     set(value) {
         val old = field
@@ -14,11 +15,6 @@ class PlayerManager(val player: Player) {
         if (old != field) GameManager.notifyReady(this)
     }
     var playing: Boolean = false
-
-    // fun shift() {
-    //     if (destination == null) throw Error("Destination is null!")
-    //     player.teleport(destination!!)
-    // }
 
     fun inLobby(): Boolean {
         return GameManager.inLobby(this.player)
