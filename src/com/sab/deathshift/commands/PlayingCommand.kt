@@ -7,7 +7,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 
-class PlayingCommand(private val plugin: DeathShift) : CommandExecutor {
+class PlayingCommand(plugin: DeathShift) : CommandExecutor {
     init {
         plugin.getCommand("playing")!!.setExecutor(this)
     }
@@ -19,12 +19,15 @@ class PlayingCommand(private val plugin: DeathShift) : CommandExecutor {
             return true
         }
         for(manager in GameManager.players) {
-            val colour = if (manager.inLobby()) ChatColor.GREEN else ChatColor.RED
+            val colour =
+                if (manager.ready) ChatColor.GREEN
+                else ChatColor.YELLOW
+
             sb.append("$colour${manager.player.name}, ${ChatColor.RESET}")
         }
 
         val msg = sb.toString()
-        sender.sendMessage(msg.substring(0, msg.length - 4))
+        sender.sendMessage(msg.substring(0, msg.length - 4)) // subtract 4 because ", &f" or whichever at end
         return true
     }
 }

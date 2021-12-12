@@ -8,7 +8,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class JoinCommand(private val plugin: DeathShift) : CommandExecutor {
+class JoinCommand(plugin: DeathShift) : CommandExecutor {
     init {
         plugin.getCommand("join")!!.setExecutor(this)
     }
