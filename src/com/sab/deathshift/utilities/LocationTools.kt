@@ -13,30 +13,25 @@ object LocationTools {
      * https://www.spigotmc.org/threads/determine-if-an-area-is-safe-to-teleport-to.364421/
      */
     fun isSafe(location: Location): Boolean {
-        try {
-            val feet = location.block
-            if (feet.type.isOccluding && feet.location.add(0.0, 1.0, 0.0).block.type.isOccluding) {
-                return false
-            }
-            val head = feet.getRelative(BlockFace.UP)
-            if (head.type.isOccluding) {
-                return false
-            }
-            val ground = feet.getRelative(BlockFace.DOWN)
-            return ground.type.isSolid
-        } catch (err: Exception) {
-            Logger().print(err.toString())
+        val feet = location.block
+        if (feet.type.isOccluding && feet.location.add(0.0, 1.0, 0.0).block.type.isOccluding) {
+            return false
         }
-        return false
+        val head = feet.getRelative(BlockFace.UP)
+        if (head.type.isOccluding) {
+            return false
+        }
+        val ground = feet.getRelative(BlockFace.DOWN)
+        return ground.type.isSolid
     }
 
     fun generateRandomLocation(): Location {
-        var x: Int = (-2_000_000..2_000_000).random()
-        var z: Int = (-2_000_000..2_000_000).random()
+        var x = (-2_000_000..2_000_000).random()
+        var z = (-2_000_000..2_000_000).random()
         var location = Location(
             Bukkit.getWorld("world")!!,
             x.toDouble(),
-            Bukkit.getWorld("world")!!.getHighestBlockAt(x, z).y.toDouble(),
+            Bukkit.getWorld("world")!!.getHighestBlockAt(x, z).y.toDouble() + 1,
             z.toDouble()
         )
         return if (isSafe(location)) location else generateRandomLocation()
