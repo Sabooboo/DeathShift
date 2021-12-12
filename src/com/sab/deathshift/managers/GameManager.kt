@@ -32,21 +32,13 @@ object GameManager {
             manager.playing = true
             manager.player.teleport(manager.destination)
         }
-        teleport.runTaskTimer(plugin, TELEPORT_DELAY, TELEPORT_DELAY) // wait 1s, run every 10s
+        teleport.runTaskTimer(plugin, TELEPORT_DELAY, TELEPORT_DELAY)
     }
 
-    // TODO: make new StartTimer a property so I can stop queue if needed (like if a player is no longer ready)
     private fun startQueue() {
         if (starting) return
         starting = true
         startTimer.runTaskTimer(plugin,20, 20)
-    }
-
-    private fun stopQueue() {
-        if (!starting) return
-        starting = false
-        startTimer.cancel()
-        startTimer = StartTimer(plugin) // this doesn't seem like industry-standard practise...
     }
 
     fun stop() {
@@ -60,6 +52,13 @@ object GameManager {
         }
         players = mutableListOf()
         inProgress = false
+    }
+
+    private fun stopQueue() {
+        if (!starting) return
+        starting = false
+        startTimer.cancel()
+        startTimer = StartTimer(plugin) // this doesn't seem like industry-standard practise...
     }
 
     fun inLobby(player: Player): Boolean {
@@ -109,7 +108,7 @@ object GameManager {
     fun add(player: Player) {
         if (inLobby(player) || inProgress) return
         players.add(PlayerManager(player))
-        Broadcast.participants("${ChatColor.GREEN}${ChatColor.ITALIC}${player.name} has joined!")
+        Broadcast.participants("${ChatColor.GREEN}${ChatColor.ITALIC}${player.name} has joined DeathShift!")
         stopQueue()
     }
 
@@ -131,8 +130,6 @@ object GameManager {
         }
     }
 
-    // Various Broadcasting functions. May refactor into a BroadcastManager or something later.
-
     private fun broadcastReady(manager: PlayerManager) {
         if (manager.ready) {
             Broadcast.participants(
@@ -148,8 +145,8 @@ object GameManager {
     private fun broadcastLeave(player: Player) {
         if (inProgress) {
             Broadcast.participants("${ChatColor.RED}${ChatColor.BOLD}${player.name} has been eliminated!")
-        } else {
-            Broadcast.participants("${ChatColor.RED}${ChatColor.ITALIC}${player.name} has left!")
+            return
         }
+        Broadcast.participants("${ChatColor.RED}${ChatColor.ITALIC}${player.name} has left DeathShift!")
     }
 }
