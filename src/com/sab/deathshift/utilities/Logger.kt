@@ -4,7 +4,7 @@ import org.bukkit.Bukkit.getServer
 import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
 
-class Logger {
+object Logger {
 
     fun print(message: String) {
         getServer().consoleSender.sendMessage("[DeathShift] $message");

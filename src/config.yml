@@ -1,0 +1,7 @@
+# shift_time: The amount of time in seconds between shifts. 60 <= shift_time <= (2^32)-1
+# countdown: Length of the countdown before the game starts in seconds. 0 will cancel the countdown altogether.
+# random_teleport: Indicates whether you want players to be teleported to random players each shift or not.
+#
+shift_time: 120
+countdown: 5
+random_teleport: false # TODO: add functionality to random_teleport.

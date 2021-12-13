@@ -12,11 +12,10 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.lang.IllegalStateException
 
 object GameManager {
-    const val TELEPORT_DELAY: Long = 20 * 60 / 6 // 500 ticks * 60s = 1m, 1m/6 = 10s
-
     private var plugin: DeathShift = Bukkit.getPluginManager().getPlugin("DeathShift") as DeathShift
-    private var startTimer: BukkitRunnable = StartTimer(plugin)
+    private lateinit var startTimer: BukkitRunnable
     private var teleport: BukkitRunnable = Teleport(plugin)
+
     var players = mutableListOf<PlayerManager>()
         private set
     var starting = false
@@ -32,12 +31,18 @@ object GameManager {
             manager.playing = true
             manager.player.teleport(manager.destination)
         }
-        teleport.runTaskTimer(plugin, TELEPORT_DELAY, TELEPORT_DELAY)
+        val delay: Long = ConfigManager.shiftTime.toLong()
+        teleport.runTaskTimer(
+            plugin,
+            20 * delay,
+            20 * delay
+        )
     }
 
     private fun startQueue() {
         if (starting) return
         starting = true
+        startTimer = StartTimer(plugin)
         startTimer.runTaskTimer(plugin,20, 20)
     }
 

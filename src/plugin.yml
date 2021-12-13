@@ -20,3 +20,8 @@ commands:
   playing:
     description: Shows who is currently in a DeathGame lobby
     usage: /<command>
+  set:
+    description: Change the value of a config property
+    usage: /<command>
+    permission: set
+    permission-message: You do not have permission!
