@@ -7,10 +7,8 @@ object ConfigManager {
     private var plugin: DeathShift = Bukkit.getPluginManager().getPlugin("DeathShift") as DeathShift
 
     init {
-        plugin.config.addDefault("shift_time", 120)
-        plugin.config.addDefault("countdown", 5)
-        plugin.config.addDefault("random_teleport", false)
         plugin.saveDefaultConfig()
+
     }
 
     var shiftTime: Int
@@ -27,6 +25,20 @@ object ConfigManager {
             plugin.saveConfig()
         }
 
+    var warnTime: Int
+        get() = plugin.config.getInt("warn_time")
+        set(value) {
+            plugin.config.set("warn_time", value)
+            plugin.saveConfig()
+        }
+
+    var warnHalf: Boolean
+        get() = plugin.config.getBoolean("warn_half")
+        set(value) {
+            plugin.config.set("warn_half", value)
+            plugin.saveConfig()
+        }
+
     var randomTeleport: Boolean
         get() = plugin.config.getBoolean("random_teleport")
         set(value) {
@@ -34,11 +46,26 @@ object ConfigManager {
             plugin.saveConfig()
         }
 
+    var knowNextTarget: Boolean
+        get() = plugin.config.getBoolean("know_next_target")
+        set(value) {
+            plugin.config.set("know_next_target", value)
+            plugin.saveConfig()
+        }
+
     fun get(path: String): Any? {
         return plugin.config.get(path)
     }
 
+    /**
+     * Sets an existing variable at path to the specified value.
+     * Using this is a bad idea, and it's suggested to use the properties of the ConfigManager instead.
+     * @param path the name of the variable in the config being changed.
+     * @param value the value to change the variable at path to.
+     *
+     */
     fun set(path: String, value: Any) {
+        if (get(path) == null) throw Exception("path does not exist in config")
         plugin.config.set(path, value)
         plugin.saveConfig()
     }

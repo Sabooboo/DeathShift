@@ -3,18 +3,17 @@ package com.sab.deathshift.managers
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.tasks.StartTimer
 import com.sab.deathshift.tasks.Teleport
+import com.sab.deathshift.tasks.TeleportTimer
 import com.sab.deathshift.utilities.Broadcast
-import com.sab.deathshift.utilities.Logger
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
-import java.lang.IllegalStateException
 
 object GameManager {
     private var plugin: DeathShift = Bukkit.getPluginManager().getPlugin("DeathShift") as DeathShift
     private lateinit var startTimer: BukkitRunnable
-    private var teleport: BukkitRunnable = Teleport(plugin)
+    private lateinit var teleportTimer: BukkitRunnable
 
     var players = mutableListOf<PlayerManager>()
         private set
@@ -31,12 +30,9 @@ object GameManager {
             manager.playing = true
             manager.player.teleport(manager.destination)
         }
-        val delay: Long = ConfigManager.shiftTime.toLong()
-        teleport.runTaskTimer(
-            plugin,
-            20 * delay,
-            20 * delay
-        )
+        // val delay: Long = ConfigManager.shiftTime.toLong()
+        teleportTimer = TeleportTimer(plugin)
+        teleportTimer.runTaskTimer(plugin, 20, 20)
     }
 
     private fun startQueue() {
@@ -47,8 +43,8 @@ object GameManager {
     }
 
     fun stop() {
-        teleport.cancel()
-        teleport = Teleport(plugin)
+        if (!inProgress) return
+        teleportTimer.cancel()
         if (players.size == 1) {
             Broadcast.all("${ChatColor.GOLD}${ChatColor.BOLD}${players[0].player.name.uppercase()} WINS!")
         }

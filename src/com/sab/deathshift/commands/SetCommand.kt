@@ -45,6 +45,22 @@ class SetCommand(plugin: DeathShift) : CommandExecutor {
                 }
                 ConfigManager.countdown = value.toInt()
             }
+            "warn_time" -> {
+                try { value.toInt() }
+                catch (err: NumberFormatException) {
+                    sender.sendMessage("Argument 2 needs to be an integer to be assigned to warn_time.")
+                    return true
+                }
+                ConfigManager.warnTime = value.toInt()
+            }
+            "warn_half" -> {
+                try { value.lowercase().toBooleanStrict() }
+                catch (err: Exception) {
+                    sender.sendMessage("Argument 2 needs to be true or false to be assigned to warn_half.")
+                    return true
+                }
+                ConfigManager.warnHalf = value.toBooleanStrict()
+            }
             "random_teleport" -> {
                 try { value.lowercase().toBooleanStrict() }
                 catch (err: Exception) {
@@ -52,6 +68,14 @@ class SetCommand(plugin: DeathShift) : CommandExecutor {
                     return true
                 }
                 ConfigManager.randomTeleport = value.toBooleanStrict()
+            }
+            "know_next_target" -> {
+                try { value.lowercase().toBooleanStrict() }
+                catch (err: Exception) {
+                    sender.sendMessage("Argument 2 needs to be true or false to be assigned to know_next_target.")
+                    return true
+                }
+                ConfigManager.knowNextTarget = value.toBooleanStrict()
             }
             else -> {
                 sender.sendMessage("$path does not exist in the config!")

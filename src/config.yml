@@ -1,7 +1,13 @@
 # shift_time: The amount of time in seconds between shifts. 60 <= shift_time <= (2^32)-1
 # countdown: Length of the countdown before the game starts in seconds. 0 will cancel the countdown altogether.
+# warn_time: How long the countdown will go for before players are shifted.
+# warn_half: Dictates whether players will be notified at half-time between shifts.
 # random_teleport: Indicates whether you want players to be teleported to random players each shift or not.
+# know_next_target: Dictates whether players will be informed who they are teleporting to on shift.
 #
 shift_time: 120
 countdown: 5
-random_teleport: false # TODO: add functionality to random_teleport.
+warn_time: 5
+warn_half: false
+random_teleport: false
+know_next_target: true
