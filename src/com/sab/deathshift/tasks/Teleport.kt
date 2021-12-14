@@ -5,6 +5,7 @@ import com.sab.deathshift.managers.ConfigManager
 import com.sab.deathshift.managers.GameManager
 import com.sab.deathshift.managers.PlayerManager
 import com.sab.deathshift.utilities.Broadcast
+import com.sab.deathshift.utilities.SoundUtil
 import org.bukkit.ChatColor
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -32,6 +33,7 @@ class Teleport(private val plugin: DeathShift) : BukkitRunnable() {
         for(i in GameManager.players.indices) {
             val manager = GameManager.players[indices[i]]
             manager.player.teleport(manager.destination)
+
             if (ConfigManager.knowNextTarget) {
                 manager.player.sendMessage(
                     "${ChatColor.GRAY}${ChatColor.ITALIC}You've teleported to ${

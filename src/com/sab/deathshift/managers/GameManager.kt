@@ -2,9 +2,10 @@ package com.sab.deathshift.managers
 
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.tasks.StartTimer
-import com.sab.deathshift.tasks.Teleport
 import com.sab.deathshift.tasks.TeleportTimer
 import com.sab.deathshift.utilities.Broadcast
+import com.sab.deathshift.utilities.GameSound
+import com.sab.deathshift.utilities.SoundUtil
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -30,7 +31,6 @@ object GameManager {
             manager.playing = true
             manager.player.teleport(manager.destination)
         }
-        // val delay: Long = ConfigManager.shiftTime.toLong()
         teleportTimer = TeleportTimer(plugin)
         teleportTimer.runTaskTimer(plugin, 20, 20)
     }
@@ -46,11 +46,12 @@ object GameManager {
         if (!inProgress) return
         teleportTimer.cancel()
         if (players.size == 1) {
-            Broadcast.all("${ChatColor.GOLD}${ChatColor.BOLD}${players[0].player.name.uppercase()} WINS!")
+            Broadcast.all("${ChatColor.GOLD}${players[0].player.name.uppercase()} WINS!")
         }
         else {
             Broadcast.all("${ChatColor.YELLOW}The game has been stopped!")
         }
+        SoundUtil.pingNonParticipants(GameSound.HIGH_PLING)
         players = mutableListOf()
         inProgress = false
     }
@@ -146,6 +147,7 @@ object GameManager {
     private fun broadcastLeave(player: Player) {
         if (inProgress) {
             Broadcast.participants("${ChatColor.RED}${ChatColor.BOLD}${player.name} has been eliminated!")
+            SoundUtil.pingParticipants(GameSound.DEATH)
             return
         }
         Broadcast.participants("${ChatColor.RED}${ChatColor.ITALIC}${player.name} has left DeathShift!")
