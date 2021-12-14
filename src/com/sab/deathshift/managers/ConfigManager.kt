@@ -59,7 +59,7 @@ object ConfigManager {
 
     /**
      * Sets an existing variable at path to the specified value.
-     * Using this is a bad idea, and it's suggested to use the properties of the ConfigManager instead.
+     * This performs no type validation, so passing in user input may set properties to strings.
      * @param path the name of the variable in the config being changed.
      * @param value the value to change the variable at path to.
      *

@@ -8,9 +8,6 @@ import com.sab.deathshift.utilities.SoundUtil
 import org.bukkit.ChatColor
 import org.bukkit.scheduler.BukkitRunnable
 
-// Kotlin worries about maxTime always being zero since it is pulled from
-// config at runtime.
-@Suppress("KotlinConstantConditions")
 class TeleportTimer(private val plugin: DeathShift) : BukkitRunnable() {
     var maxTime = ConfigManager.shiftTime
     var time = maxTime

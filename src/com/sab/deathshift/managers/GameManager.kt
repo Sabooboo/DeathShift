@@ -13,6 +13,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
+// SpaghettiManager
 object GameManager {
     private var plugin: DeathShift = Bukkit.getPluginManager().getPlugin("DeathShift") as DeathShift
     private lateinit var startTimer: BukkitRunnable
@@ -33,8 +34,9 @@ object GameManager {
             manager.playing = true
             manager.player.teleport(manager.destination)
             manager.player.gameMode = GameMode.SURVIVAL
-            manager.player.inventory.clear();
+            manager.player.inventory.clear()
             manager.player.health = 20.toDouble()
+            manager.player.foodLevel = 20
             manager.player.saturation = 20.toFloat()
         }
         teleportTimer = TeleportTimer(plugin)
@@ -42,7 +44,7 @@ object GameManager {
     }
 
     private fun startQueue() {
-        if (starting) return
+        if (starting || inProgress) return
         starting = true
         startTimer = StartTimer(plugin)
         startTimer.runTaskTimer(plugin,20, 20)
@@ -72,7 +74,7 @@ object GameManager {
     }
 
     private fun stopQueue() {
-        if (!starting) return
+        if (!starting || inProgress) return
         starting = false
         startTimer.cancel()
         startTimer = StartTimer(plugin) // this doesn't seem like industry-standard practise...
@@ -108,12 +110,6 @@ object GameManager {
      */
     fun notifyReady(manager: PlayerManager) {
         if (!inLobby(manager.player) || inProgress) return
-        // I suppose this is sloppy but this is done under the pretense that
-        // when the game ends, the players list will be emptied and every
-        // PlayerManager will be deleted anyway, so this doesn't care
-        // about who is ready or not when game is in progress.
-        // Thanks for coming to my TED Talk.
-
         broadcastReady(manager)
         if (!inProgress && manager.ready && (countReady() == players.size) && countReady() > 1) {
             startQueue()

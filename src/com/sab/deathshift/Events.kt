@@ -30,6 +30,4 @@ object Events : Listener {
             GameManager.remove(e.player)
         }
     }
-
-
 }
