@@ -2,6 +2,7 @@ package com.sab.deathshift.commands
 
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.managers.ConfigManager
+import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -18,69 +19,39 @@ class SetCommand(plugin: DeathShift) : CommandExecutor {
             return true
         }
 
-        /*
-         * TODO:
-         *  I would like to make this cleaner but it seems needlessly complex for my scope right now.
-         *  I'm especially displeased with this because future me will cringe when he adds more config
-         *  properties, but the idea of performing type validation at runtime seems foreign to Kotlin
-         *  devs on stackoverflow and the like.
-         *  I'll figure something out later. It's 07:30 and I haven't slept yet...
-         */
         val path = args[0]
-        val value = args[1]
-        when (path) {
-            "shift_time" -> {
-                try { value.toInt() }
-                catch (err: NumberFormatException) {
-                    sender.sendMessage("Argument 2 needs to be an integer to be assigned to shift_time.")
-                    return true
-                }
-                ConfigManager.shiftTime = value.toInt()
+        val valueRaw = args[1]
+
+        if (ConfigManager.get(path) == null) {
+            sender.sendMessage("$path does not exist in the config.")
+            return true
+        }
+
+        var value: Any?
+        try {
+            value = when (ConfigManager.get(path)) {
+                is Int -> valueRaw.toInt()
+                is Boolean -> valueRaw.lowercase().toBooleanStrict()
+                else -> { null }
             }
-            "countdown" -> {
-                try { value.toInt() }
-                catch (err: NumberFormatException) {
-                    sender.sendMessage("Argument 2 needs to be an integer to be assigned to countdown.")
-                    return true
+        } catch (err: Exception) {
+            return when (err) {
+                is NumberFormatException -> {
+                    sender.sendMessage("Argument 2 needs to be an integer to be assigned to ${path}.")
+                    true
                 }
-                ConfigManager.countdown = value.toInt()
-            }
-            "warn_time" -> {
-                try { value.toInt() }
-                catch (err: NumberFormatException) {
-                    sender.sendMessage("Argument 2 needs to be an integer to be assigned to warn_time.")
-                    return true
+                else -> {
+                    sender.sendMessage("Argument 2 needs to be true or false to be assigned to ${path}.")
+                    true
                 }
-                ConfigManager.warnTime = value.toInt()
-            }
-            "warn_half" -> {
-                try { value.lowercase().toBooleanStrict() }
-                catch (err: Exception) {
-                    sender.sendMessage("Argument 2 needs to be true or false to be assigned to warn_half.")
-                    return true
-                }
-                ConfigManager.warnHalf = value.toBooleanStrict()
-            }
-            "random_teleport" -> {
-                try { value.lowercase().toBooleanStrict() }
-                catch (err: Exception) {
-                    sender.sendMessage("Argument 2 needs to be true or false to be assigned to random_teleport.")
-                    return true
-                }
-                ConfigManager.randomTeleport = value.toBooleanStrict()
-            }
-            "know_next_target" -> {
-                try { value.lowercase().toBooleanStrict() }
-                catch (err: Exception) {
-                    sender.sendMessage("Argument 2 needs to be true or false to be assigned to know_next_target.")
-                    return true
-                }
-                ConfigManager.knowNextTarget = value.toBooleanStrict()
-            }
-            else -> {
-                sender.sendMessage("$path does not exist in the config!")
             }
         }
+        if (value == null) {
+            sender.sendMessage("There was an error setting $path to $valueRaw")
+            return true
+        }
+        ConfigManager.set(path, value)
+        sender.sendMessage("${ChatColor.GRAY}${ChatColor.ITALIC}$path successfully set to $value")
         return true
     }
 }
