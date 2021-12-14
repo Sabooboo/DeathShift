@@ -8,6 +8,8 @@ import com.sab.deathshift.utilities.GameSound
 import com.sab.deathshift.utilities.SoundUtil
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -30,6 +32,10 @@ object GameManager {
         for (manager in players) {
             manager.playing = true
             manager.player.teleport(manager.destination)
+            manager.player.gameMode = GameMode.SURVIVAL
+            manager.player.inventory.clear();
+            manager.player.health = 20.toDouble()
+            manager.player.saturation = 20.toFloat()
         }
         teleportTimer = TeleportTimer(plugin)
         teleportTimer.runTaskTimer(plugin, 20, 20)
@@ -52,6 +58,15 @@ object GameManager {
             Broadcast.all("${ChatColor.YELLOW}The game has been stopped!")
         }
         SoundUtil.pingNonParticipants(GameSound.HIGH_PLING)
+        for (p in Bukkit.getOnlinePlayers()) {
+            p.gameMode = GameMode.CREATIVE
+            p.teleport(Location(
+                Bukkit.getWorld("world")!!,
+                0.toDouble(),
+                Bukkit.getWorld("world")!!.getHighestBlockAt(0, 0).y.toDouble() + 1,
+                0.toDouble()
+            ))
+        }
         players = mutableListOf()
         inProgress = false
     }
@@ -119,6 +134,7 @@ object GameManager {
         broadcastLeave(player)
         get(player)?.playing = false
         players.remove(get(player))
+        player.gameMode = GameMode.SPECTATOR
 
         if (!inProgress) {
             for (manager in players) {
