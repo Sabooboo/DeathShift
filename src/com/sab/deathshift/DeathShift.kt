@@ -2,7 +2,6 @@ package com.sab.deathshift
 
 import com.sab.deathshift.commands.*
 import com.sab.deathshift.managers.ConfigManager
-import com.sab.deathshift.managers.GameManager
 import org.bukkit.plugin.java.JavaPlugin
 
 class DeathShift : JavaPlugin() {

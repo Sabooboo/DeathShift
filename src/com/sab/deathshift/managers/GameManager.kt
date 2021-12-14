@@ -130,17 +130,14 @@ object GameManager {
         broadcastLeave(player)
         get(player)?.playing = false
         players.remove(get(player))
-        player.gameMode = GameMode.SPECTATOR
 
         if (!inProgress) {
             for (manager in players) {
                 manager.ready = false
             }
-        }
-
-        if (inProgress && players.size == 1) {
-            stop()
-            return
+        } else {
+            player.gameMode = GameMode.SPECTATOR
+            if (players.size == 1) stop()
         }
     }
 
