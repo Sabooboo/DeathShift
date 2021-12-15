@@ -28,7 +28,6 @@ object LocationTools {
         while (!isSafe) {
             var x = Random.nextDouble(-1.0, 1.0) * 2_000_000
             var z = Random.nextDouble(-1.0, 1.0) * 2_000_000
-            Broadcast.all("$x, $z") // debug
             location = Location(
                 Bukkit.getWorld("world")!!,
                 x,
