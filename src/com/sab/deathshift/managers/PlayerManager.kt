@@ -5,7 +5,6 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 
 class PlayerManager(val player: Player) {
-
     var destination: Location = LocationTools.generateRandomLocation()
     var playing: Boolean = false
     var ready: Boolean = false
