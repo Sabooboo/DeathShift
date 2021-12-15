@@ -26,6 +26,20 @@ object GameManager {
     var inProgress: Boolean = false
         private set
 
+    private fun startQueue() {
+        if (starting || inProgress) return
+        starting = true
+        startTimer = StartTimer(plugin)
+        startTimer.runTaskTimer(plugin,20, 20)
+    }
+
+    private fun stopQueue() {
+        if (!starting || inProgress) return
+        starting = false
+        startTimer.cancel()
+        startTimer = StartTimer(plugin) // this doesn't seem like industry-standard practise...
+    }
+
     fun start() {
         if (inProgress) return
         inProgress = true
@@ -33,6 +47,7 @@ object GameManager {
         for (manager in players) {
             manager.playing = true
             manager.player.teleport(manager.destination)
+            // TODO: stick in PlayerManager
             manager.player.gameMode = GameMode.SURVIVAL
             manager.player.inventory.clear()
             manager.player.health = 20.toDouble()
@@ -41,13 +56,6 @@ object GameManager {
         }
         teleportTimer = TeleportTimer(plugin)
         teleportTimer.runTaskTimer(plugin, 20, 20)
-    }
-
-    private fun startQueue() {
-        if (starting || inProgress) return
-        starting = true
-        startTimer = StartTimer(plugin)
-        startTimer.runTaskTimer(plugin,20, 20)
     }
 
     fun stop() {
@@ -71,13 +79,6 @@ object GameManager {
         }
         players = mutableListOf()
         inProgress = false
-    }
-
-    private fun stopQueue() {
-        if (!starting || inProgress) return
-        starting = false
-        startTimer.cancel()
-        startTimer = StartTimer(plugin) // this doesn't seem like industry-standard practise...
     }
 
     fun inLobby(player: Player): Boolean {
@@ -111,7 +112,7 @@ object GameManager {
     fun notifyReady(manager: PlayerManager) {
         if (!inLobby(manager.player) || inProgress) return
         broadcastReady(manager)
-        if (!inProgress && manager.ready && (countReady() == players.size) && countReady() > 1) {
+        if (manager.ready && (countReady() == players.size) && countReady() > 1) {
             startQueue()
             return
         }

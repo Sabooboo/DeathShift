@@ -3,6 +3,7 @@ package com.sab.deathshift.utilities
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.BlockFace
+import kotlin.random.Random
 
 object LocationTools {
     /**
@@ -17,23 +18,25 @@ object LocationTools {
         if (feet.type.isOccluding && feet.location.add(0.0, 1.0, 0.0).block.type.isOccluding) {
             return false
         }
-        val head = feet.getRelative(BlockFace.UP)
-        if (head.type.isOccluding) {
-            return false
-        }
         val ground = feet.getRelative(BlockFace.DOWN)
         return ground.type.isSolid
     }
-
+    
     fun generateRandomLocation(): Location {
-        var x = (-2_000_000..2_000_000).random()
-        var z = (-2_000_000..2_000_000).random()
-        var location = Location(
-            Bukkit.getWorld("world")!!,
-            x.toDouble(),
-            Bukkit.getWorld("world")!!.getHighestBlockAt(x, z).y.toDouble() + 1,
-            z.toDouble()
-        )
-        return if (isSafe(location)) location else generateRandomLocation()
+        var isSafe = false
+        lateinit var location: Location
+        while (!isSafe) {
+            var x = Random.nextDouble(-1.0, 1.0) * 2_000_000
+            var z = Random.nextDouble(-1.0, 1.0) * 2_000_000
+            Broadcast.all("$x, $z") // debug
+            location = Location(
+                Bukkit.getWorld("world")!!,
+                x,
+                Bukkit.getWorld("world")!!.getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble(),
+                z
+            )
+            isSafe = isSafe(location)
+        }
+        return location.add(0.0, 1.0, 0.0)
     }
 }
