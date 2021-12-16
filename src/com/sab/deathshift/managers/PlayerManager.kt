@@ -1,16 +1,34 @@
 package com.sab.deathshift.managers
 
 import com.sab.deathshift.utilities.LocationTools
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
 class PlayerManager(val player: Player) {
-    var destination: Location = LocationTools.generateRandomLocation()
-    var playing: Boolean = false
-    var ready: Boolean = false
-    set(value) {
-        val old = field
-        field = value
-        if (old != field) GameManager.notifyReady(this)
+
+    var destination = LocationTools.generateRandomLocation()
+
+    var state = PlayerState.UNREADY
+        set(value) {
+            if (field == value) return
+            field = value
+            when (value) {
+                PlayerState.PLAYING -> {
+                    return
+                }
+                PlayerState.READY, PlayerState.UNREADY -> {
+                    GameManager.notifyReady(this)
+                    return
+                }
+            }
+        }
+
+    fun setup() {
+        player.gameMode = GameMode.SURVIVAL
+        player.inventory.clear()
+        player.health = 20.toDouble()
+        player.foodLevel = 20
+        player.saturation = 20.toFloat()
     }
 }

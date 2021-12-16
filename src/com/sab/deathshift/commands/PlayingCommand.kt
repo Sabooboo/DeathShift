@@ -2,6 +2,7 @@ package com.sab.deathshift.commands
 
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.managers.GameManager
+import com.sab.deathshift.managers.PlayerState
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -20,8 +21,14 @@ class PlayingCommand(plugin: DeathShift) : CommandExecutor {
         }
         for(manager in GameManager.players) {
             val colour =
-                if (manager.ready) ChatColor.GREEN
-                else ChatColor.YELLOW
+                when (manager.state) {
+                    PlayerState.READY, PlayerState.PLAYING -> {
+                        ChatColor.GREEN
+                    }
+                    else -> {
+                        ChatColor.YELLOW
+                    }
+                }
 
             sb.append("$colour${manager.player.name}, ${ChatColor.RESET}")
         }

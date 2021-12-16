@@ -2,6 +2,8 @@ package com.sab.deathshift.commands
 
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.managers.GameManager
+import com.sab.deathshift.managers.GameState
+import com.sab.deathshift.managers.PlayerState
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -22,11 +24,12 @@ class UnreadyCommand(plugin: DeathShift) : CommandExecutor {
             sender.sendMessage("${ChatColor.GRAY}${ChatColor.ITALIC}You aren't in a game of DeathShift!")
             return true
         }
-        if (GameManager.inProgress) {
+        if (GameManager.state == GameState.PLAYING) {
             sender.sendMessage("${ChatColor.RED}${ChatColor.BOLD}YOU ALREADY SIGNED UP FOR THIS!!!")
             return true
         }
-        GameManager.get(sender)?.ready = false
+
+        GameManager.get(sender)?.state = PlayerState.UNREADY
         return true
     }
 }

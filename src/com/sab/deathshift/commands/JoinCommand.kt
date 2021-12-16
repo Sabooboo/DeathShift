@@ -2,6 +2,7 @@ package com.sab.deathshift.commands
 
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.managers.GameManager
+import com.sab.deathshift.managers.GameState
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -18,7 +19,7 @@ class JoinCommand(plugin: DeathShift) : CommandExecutor {
             sender.sendMessage("Only players can use this command!")
             return true
         }
-        if (GameManager.inProgress) {
+        if (GameManager.state == GameState.PLAYING) {
             sender.sendMessage("${ChatColor.GRAY}${ChatColor.ITALIC}You can't join games in progress!")
             return true
         }

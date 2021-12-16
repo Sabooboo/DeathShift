@@ -53,6 +53,13 @@ object ConfigManager {
             plugin.saveConfig()
         }
 
+    var randomInitialTeleport: Boolean
+        get() = plugin.config.getBoolean("random_initial_teleport")
+        set(value) {
+            plugin.config.set("random_initial_teleport", value)
+            plugin.saveConfig()
+        }
+
     fun get(path: String): Any? {
         return plugin.config.get(path)
     }

@@ -4,6 +4,7 @@
 # warn_half: Dictates whether players will be notified at half-time between shifts.
 # random_teleport: Indicates whether you want players to be teleported to random players each shift or not.
 # know_next_target: Dictates whether players will be informed who they are teleporting to on shift.
+# random_initial_teleport: Dictates whether players will be teleported to a random position on game start.
 #
 shift_time: 120
 countdown: 5
@@ -11,3 +12,4 @@ warn_time: 5
 warn_half: false
 random_teleport: false
 know_next_target: true
+random_initial_teleport: true
