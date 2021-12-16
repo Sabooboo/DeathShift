@@ -5,58 +5,61 @@ import com.sab.deathshift.tasks.StartTimer
 import com.sab.deathshift.tasks.TeleportTimer
 import com.sab.deathshift.utilities.Broadcast
 import com.sab.deathshift.utilities.GameSound
-import com.sab.deathshift.utilities.LocationTools
 import com.sab.deathshift.utilities.SoundUtil
-import org.bukkit.*
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
 // SpaghettiManager
 object GameManager {
-
     private var plugin: DeathShift = Bukkit.getPluginManager().getPlugin("DeathShift") as DeathShift
     private lateinit var startTimer: BukkitRunnable
     private lateinit var teleportTimer: BukkitRunnable
 
     var players = mutableListOf<PlayerManager>()
         private set
-    var state = GameState.STOPPED
+    var starting = false
+        private set
+    var inProgress: Boolean = false
         private set
 
     private fun startQueue() {
-        if (state != GameState.STOPPED) return
-        state = GameState.STARTING
+        if (starting || inProgress) return
+        starting = true
         startTimer = StartTimer(plugin)
         startTimer.runTaskTimer(plugin,20, 20)
     }
 
     private fun stopQueue() {
-        if (state != GameState.STARTING) return
-        state = GameState.STOPPED
+        if (!starting || inProgress) return
+        starting = false
         startTimer.cancel()
         startTimer = StartTimer(plugin) // this doesn't seem like industry-standard practise...
     }
 
     fun start() {
-        if (state == GameState.PLAYING) return
-        state = GameState.PLAYING
+        if (inProgress) return
+        inProgress = true
         Broadcast.all("${ChatColor.GREEN}${ChatColor.ITALIC}Game starting!")
-        val randomInitialTeleport = ConfigManager.randomInitialTeleport
         for (manager in players) {
-            manager.state = PlayerState.PLAYING
-            if (randomInitialTeleport) manager.player.teleport(manager.destination)
-            manager.setup()
+            manager.playing = true
+            manager.player.teleport(manager.destination)
+            // TODO: stick in PlayerManager
+            manager.player.gameMode = GameMode.SURVIVAL
+            manager.player.inventory.clear()
+            manager.player.health = 20.toDouble()
+            manager.player.foodLevel = 20
+            manager.player.saturation = 20.toFloat()
         }
         teleportTimer = TeleportTimer(plugin)
         teleportTimer.runTaskTimer(plugin, 20, 20)
     }
 
     fun stop() {
-        if (state != GameState.PLAYING) return
-        if (state == GameState.STARTING) {
-            stopQueue()
-            return
-        }
+        if (!inProgress) return
         teleportTimer.cancel()
         if (players.size == 1) {
             Broadcast.all("${ChatColor.GOLD}${players[0].player.name.uppercase()} WINS!")
@@ -75,7 +78,7 @@ object GameManager {
             ))
         }
         players = mutableListOf()
-        state = GameState.STOPPED
+        inProgress = false
     }
 
     fun inLobby(player: Player): Boolean {
@@ -92,7 +95,7 @@ object GameManager {
     private fun countReady(): Int {
         var readyAmount = 0
         for (playerManager in players) {
-            if (playerManager.state == PlayerState.READY) readyAmount++
+            if (playerManager.ready) readyAmount++
         }
         return readyAmount
     }
@@ -107,9 +110,9 @@ object GameManager {
      *  notified.
      */
     fun notifyReady(manager: PlayerManager) {
-        if (!inLobby(manager.player) || state == GameState.PLAYING) return
+        if (!inLobby(manager.player) || inProgress) return
         broadcastReady(manager)
-        if (manager.state == PlayerState.READY && (countReady() == players.size) && countReady() > 1) {
+        if (manager.ready && (countReady() == players.size) && countReady() > 1) {
             startQueue()
             return
         }
@@ -117,7 +120,7 @@ object GameManager {
     }
 
     fun add(player: Player) {
-        if (inLobby(player) || state == GameState.PLAYING) return
+        if (inLobby(player) || inProgress) return
         players.add(PlayerManager(player))
         Broadcast.participants("${ChatColor.GREEN}${ChatColor.ITALIC}${player.name} has joined DeathShift!")
         stopQueue()
@@ -126,11 +129,12 @@ object GameManager {
     fun remove(player: Player) {
         if (!inLobby(player)) return
         broadcastLeave(player)
+        get(player)?.playing = false
         players.remove(get(player))
 
-        if (state != GameState.PLAYING) {
+        if (!inProgress) {
             for (manager in players) {
-                manager.state = PlayerState.UNREADY
+                manager.ready = false
             }
         } else {
             player.gameMode = GameMode.SPECTATOR
@@ -139,7 +143,7 @@ object GameManager {
     }
 
     private fun broadcastReady(manager: PlayerManager) {
-        if (manager.state == PlayerState.READY) {
+        if (manager.ready) {
             Broadcast.participants(
                 "${ChatColor.YELLOW}${manager.player.name} is ready! (${countReady()}/${players.size})"
             )
@@ -151,7 +155,7 @@ object GameManager {
     }
 
     private fun broadcastLeave(player: Player) {
-        if (state == GameState.PLAYING) {
+        if (inProgress) {
             Broadcast.participants("${ChatColor.RED}${ChatColor.BOLD}${player.name} has been eliminated!")
             SoundUtil.pingParticipants(GameSound.DEATH)
             return
