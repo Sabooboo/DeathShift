@@ -20,12 +20,12 @@ object LocationTools {
         var isSafe = false
         lateinit var location: Location
         while (!isSafe) {
-            var x = Random.nextInt(-2_000_000, 2_000_000).toDouble()
-            var z = Random.nextInt(-2_000_000, 2_000_000).toDouble()
+            var x = Random.nextInt(-5_000, 5_000).toDouble()
+            var z = Random.nextInt(-5_000, 5_000).toDouble()
             // Finding y takes a painfully long time on first pass.
             var y = Bukkit.getWorld("world")!!.getHighestBlockYAt(x.toInt(), z.toInt()).toDouble()
             location = Location(Bukkit.getWorld("world")!!, x, y, z)
-
+            // Logger.print("$x, $y, $z")
             isSafe = isSafe(location)
         }
         return location.add(0.5, 1.0, 0.5)
