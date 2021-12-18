@@ -28,6 +28,6 @@ object LocationTools {
 
             isSafe = isSafe(location)
         }
-        return location.add(0.0, 1.0, 0.0)
+        return location.add(0.5, 1.0, 0.5)
     }
 }
