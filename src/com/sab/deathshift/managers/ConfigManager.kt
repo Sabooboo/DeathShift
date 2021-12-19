@@ -60,6 +60,13 @@ object ConfigManager {
             plugin.saveConfig()
         }
 
+    var portalsEnabled: Boolean
+        get() = plugin.config.getBoolean("portals_enabled")
+        set(value) {
+            plugin.config.set("portals_enabled", value)
+            plugin.saveConfig()
+        }
+
     fun get(path: String): Any? {
         return plugin.config.get(path)
     }
