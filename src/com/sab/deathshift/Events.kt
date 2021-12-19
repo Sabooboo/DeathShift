@@ -33,9 +33,9 @@ object Events : Listener {
     @EventHandler
     fun onPlayerDamage(e: EntityDamageEvent) {
         if (e.entity !is Player) return
-        if (GameManager.inLobby(e.entity) && (GameManager.state != GameState.PLAYING)) return
- 
+        
         val player = e.entity as Player
+        if (GameManager.inLobby(player) && (GameManager.state != GameState.PLAYING)) return
         if (player.health - e.damage >= 1) return
         e.isCancelled = true
         GameManager.remove(player)
