@@ -153,7 +153,7 @@ object GameManager {
     private fun broadcastLeave(player: Player) {
         if (state == GameState.PLAYING) {
             Broadcast.participants("${ChatColor.RED}${ChatColor.BOLD}${player.name} has been eliminated!")
-            SoundUtil.pingParticipants(GameSound.DEATH)
+            SoundUtil.pingParticipants(GameSound.LIGHTNING)
             return
         }
         Broadcast.participants("${ChatColor.RED}${ChatColor.ITALIC}${player.name} has left DeathShift!")
