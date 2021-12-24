@@ -35,7 +35,7 @@ object Events : Listener {
         if (e.entity !is Player) return
         
         val player = e.entity as Player
-        if (GameManager.inLobby(player) && (GameManager.state != GameState.PLAYING)) return
+        if (!GameManager.inLobby(player) || GameManager.state != GameState.PLAYING) return
         if (player.health - e.damage >= 1) return
         e.isCancelled = true
         GameManager.remove(player)
