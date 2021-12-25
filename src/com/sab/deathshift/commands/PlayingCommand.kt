@@ -2,6 +2,7 @@ package com.sab.deathshift.commands
 
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.managers.GameManager
+import com.sab.deathshift.managers.GameState
 import com.sab.deathshift.managers.PlayerState
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -15,26 +16,31 @@ class PlayingCommand(plugin: DeathShift) : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
         val sb = StringBuilder()
-        if (GameManager.players.size == 0) {
-            sender.sendMessage("${ChatColor.GRAY}${ChatColor.ITALIC}Nobody is playing right now...")
+        val playing = mutableListOf<String>()
+        val ready = mutableListOf<String>()
+        val unready = mutableListOf<String>()
+        for (manager in GameManager.players) {
+            when (manager.state) {
+                PlayerState.PLAYING -> {
+                    playing.add(manager.player.name)
+                }
+                PlayerState.READY -> {
+                    ready.add(manager.player.name)
+                }
+                PlayerState.UNREADY -> {
+                    unready.add(manager.player.name)
+                }
+            }
+        }
+
+        if (GameManager.state == GameState.PLAYING) {
+            sb.append("${ChatColor.GREEN}Playing: ${playing.joinToString(", ")}")
+            sender.sendMessage("$sb")
             return true
         }
-        for(manager in GameManager.players) {
-            val colour =
-                when (manager.state) {
-                    PlayerState.READY, PlayerState.PLAYING -> {
-                        ChatColor.GREEN
-                    }
-                    else -> {
-                        ChatColor.YELLOW
-                    }
-                }
-
-            sb.append("$colour${manager.player.name}, ${ChatColor.RESET}")
-        }
-
-        val msg = sb.toString()
-        sender.sendMessage(msg.substring(0, msg.length - 4)) // subtract 4 because ", &f" or whichever at end
+        sb.appendLine("${ChatColor.GREEN}Ready: ${ChatColor.GRAY}${ready.joinToString(", ")}")
+        sb.append("${ChatColor.YELLOW}Unready: ${ChatColor.GRAY}${unready.joinToString(", ")}")
+        sender.sendMessage("$sb")
         return true
     }
 }
