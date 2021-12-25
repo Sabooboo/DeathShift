@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 class Teleport(private val plugin: DeathShift) : BukkitRunnable() {
     override fun run() {
-        Broadcast.participants("${ChatColor.GREEN}${ChatColor.ITALIC}Teleporting!")
+        Broadcast.all("${ChatColor.GREEN}${ChatColor.ITALIC}Teleporting!")
 
         var indices = GameManager.players.indices.toList()
         if (ConfigManager.randomTeleport) indices = indices.shuffled()

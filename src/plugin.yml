@@ -20,6 +20,9 @@ commands:
   playing:
     description: Shows who is currently in a DeathGame lobby
     usage: /<command>
+  settings:
+    description: Shows the current DeathShift settings
+    usage: /<command>
   set:
     description: Change the value of a config property
     usage: /<command>

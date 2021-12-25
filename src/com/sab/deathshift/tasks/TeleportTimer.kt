@@ -25,7 +25,7 @@ class TeleportTimer(private val plugin: DeathShift) : BukkitRunnable() {
 
         if (!alertedHalf && time <= maxTime/2 && ConfigManager.warnHalf) {
             SoundUtil.pingParticipants(GameSound.HIGH_PLING)
-            Broadcast.participants("${ChatColor.RED}${time} seconds until teleport!")
+            Broadcast.all("${ChatColor.RED}${time} seconds until teleport!")
             alertedHalf = true
         }
 

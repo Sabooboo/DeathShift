@@ -8,7 +8,6 @@ object ConfigManager {
 
     init {
         plugin.saveDefaultConfig()
-
     }
 
     var shiftTime: Int
@@ -69,6 +68,10 @@ object ConfigManager {
 
     fun get(path: String): Any? {
         return plugin.config.get(path)
+    }
+
+    fun getAll(): Map<String, Any> {
+        return plugin.config.getValues(false)
     }
 
     /**

@@ -15,6 +15,7 @@ class DeathShift : JavaPlugin() {
         UnreadyCommand(this)
         ReadyCommand(this)
         PlayingCommand(this)
+        SettingsCommand(this)
     }
 
     override fun onDisable() {}
