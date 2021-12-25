@@ -66,6 +66,13 @@ object ConfigManager {
             plugin.saveConfig()
         }
 
+    var randomLocationBounds: Int
+        get() = plugin.config.getInt("random_location_bounds")
+        set(value) {
+            plugin.config.set("random_location_bounds", value)
+            plugin.saveConfig()
+        }
+
     fun get(path: String): Any? {
         return plugin.config.get(path)
     }

@@ -16,16 +16,18 @@ object LocationTools {
         return location.block.getRelative(BlockFace.DOWN).type.isSolid
     }
     
-    fun generateRandomLocation(): Location {
+    fun generateRandomLocation(min: Int, max: Int): Location {
         var isSafe = false
         lateinit var location: Location
         while (!isSafe) {
-            var x = Random.nextInt(-5_000, 5_000).toDouble()
-            var z = Random.nextInt(-5_000, 5_000).toDouble()
+            val x = Random.nextInt(min, max).toDouble()
+            val z = Random.nextInt(min, max).toDouble()
             // Finding y takes a painfully long time on first pass.
-            var y = Bukkit.getWorld("world")!!.getHighestBlockYAt(x.toInt(), z.toInt()).toDouble()
+            val y = Bukkit.getWorld("world")!!.getHighestBlockYAt(x.toInt(), z.toInt()).toDouble()
             location = Location(Bukkit.getWorld("world")!!, x, y, z)
             // Logger.print("$x, $y, $z")
+            // Logger.print("min: $min max: $max")
+            // Logger.print("${x >= min && x <= max && z >= min && z <= max}")
             isSafe = isSafe(location)
         }
         return location.add(0.5, 1.0, 0.5)

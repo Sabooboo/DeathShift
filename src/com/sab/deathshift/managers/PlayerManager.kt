@@ -7,7 +7,9 @@ import org.bukkit.entity.Player
 
 class PlayerManager(val player: Player) {
 
-    var destination = LocationTools.generateRandomLocation()
+    var destination = LocationTools.generateRandomLocation(
+        -ConfigManager.randomLocationBounds, ConfigManager.randomLocationBounds
+    )
 
     var state = PlayerState.UNREADY
         set(value) {

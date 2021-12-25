@@ -14,7 +14,6 @@ class LeaveCommand(plugin: DeathShift) : CommandExecutor {
     }
 
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
-        // TODO: These next 8 lines are duplicated a bunch. I wonder what I should do to fix this.
         if (sender !is Player) {
             sender.sendMessage("Only players can use this command!")
             return true
