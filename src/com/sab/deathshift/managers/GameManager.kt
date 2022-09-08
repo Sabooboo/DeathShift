@@ -1,12 +1,8 @@
 package com.sab.deathshift.managers
 
 import com.sab.deathshift.DeathShift
-import com.sab.deathshift.tasks.StartTimer
-import com.sab.deathshift.tasks.TeleportTimer
-import com.sab.deathshift.utilities.Broadcast
-import com.sab.deathshift.utilities.GameSound
-import com.sab.deathshift.utilities.LocationTools
-import com.sab.deathshift.utilities.SoundUtil
+import com.sab.deathshift.tasks.*
+import com.sab.deathshift.utilities.*
 import org.bukkit.*
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
@@ -52,11 +48,12 @@ object GameManager {
     }
 
     fun stop() {
-        if (state != GameState.PLAYING) return
         if (state == GameState.STARTING) {
             stopQueue()
             return
         }
+        if (state == GameState.STOPPED) return
+
         teleportTimer.cancel()
         if (players.size == 1) {
             Broadcast.all("${ChatColor.GOLD}${players[0].player.name.uppercase()} WINS!")
