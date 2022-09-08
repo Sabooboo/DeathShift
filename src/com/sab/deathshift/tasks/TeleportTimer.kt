@@ -9,9 +9,9 @@ import org.bukkit.ChatColor
 import org.bukkit.scheduler.BukkitRunnable
 
 class TeleportTimer(private val plugin: DeathShift) : BukkitRunnable() {
-    var maxTime = ConfigManager.shiftTime
-    var time = maxTime
-    var alertedHalf = false
+    private var maxTime = ConfigManager.shiftTime
+    private var time = maxTime
+    private var alertedHalf = false
 
     override fun run() {
         if (time == 0) {
@@ -23,7 +23,7 @@ class TeleportTimer(private val plugin: DeathShift) : BukkitRunnable() {
             return
         }
 
-        if (!alertedHalf && time <= maxTime/2 && ConfigManager.warnHalf) {
+        if (!alertedHalf && time <= maxTime / 2 && ConfigManager.warnHalf) {
             SoundUtil.pingParticipants(GameSound.HIGH_PLING)
             Broadcast.all("${ChatColor.RED}${time} seconds until teleport!")
             alertedHalf = true

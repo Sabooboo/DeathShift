@@ -15,8 +15,8 @@ object Broadcast {
     }
 
     fun all(message: String) {
-        Bukkit.getOnlinePlayers().forEach {
-                p: Player -> p.sendMessage(message)
+        Bukkit.getOnlinePlayers().forEach { p: Player ->
+            p.sendMessage(message)
         }
     }
 }

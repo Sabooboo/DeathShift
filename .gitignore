@@ -2,3 +2,5 @@ Dependencies/*
 out/*
 .idea/*
 run
+.DS_Store
+lib/*

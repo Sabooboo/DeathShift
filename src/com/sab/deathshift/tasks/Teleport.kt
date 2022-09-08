@@ -3,9 +3,7 @@ package com.sab.deathshift.tasks
 import com.sab.deathshift.DeathShift
 import com.sab.deathshift.managers.ConfigManager
 import com.sab.deathshift.managers.GameManager
-import com.sab.deathshift.managers.PlayerManager
 import com.sab.deathshift.utilities.Broadcast
-import com.sab.deathshift.utilities.SoundUtil
 import org.bukkit.ChatColor
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -17,20 +15,18 @@ class Teleport(private val plugin: DeathShift) : BukkitRunnable() {
         if (ConfigManager.randomTeleport) indices = indices.shuffled()
 
 
-        for(i in GameManager.players.indices) {
+        for (i in GameManager.players.indices) {
             val manager = GameManager.players[indices[i]]
 
-            var next: PlayerManager
-            if (i == indices.size - 1) {
-                next = GameManager.players[indices[0]]
-            }
-            else {
-                next = GameManager.players[indices[i + 1]]
+            val next = if (i == indices.size - 1) {
+                GameManager.players[indices[0]]
+            } else {
+                GameManager.players[indices[i + 1]]
             }
             manager.destination = next.player.location
         }
 
-        for(i in GameManager.players.indices) {
+        for (i in GameManager.players.indices) {
             val manager = GameManager.players[indices[i]]
             manager.player.teleport(manager.destination)
 

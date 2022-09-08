@@ -24,9 +24,11 @@ class PlayingCommand(plugin: DeathShift) : CommandExecutor {
                 PlayerState.PLAYING -> {
                     playing.add(manager.player.name)
                 }
+
                 PlayerState.READY -> {
                     ready.add(manager.player.name)
                 }
+
                 PlayerState.UNREADY -> {
                     unready.add(manager.player.name)
                 }
