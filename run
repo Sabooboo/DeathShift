@@ -1,5 +1,0 @@
-# I set up this script expecting a run script in $spigotserverlocation.
-# That script should start up whatever server you are running.
-spigotserverlocation=SERVER_LOCATION_HERE!
-cd $spigotserverlocation
-./run
