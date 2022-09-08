@@ -15,7 +15,7 @@ object LocationTools {
     private fun isSafe(location: Location): Boolean {
         return location.block.getRelative(BlockFace.DOWN).type.isSolid
     }
-    
+
     fun generateRandomLocation(min: Int, max: Int): Location {
         var isSafe = false
         lateinit var location: Location

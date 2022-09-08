@@ -6,7 +6,6 @@ import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import kotlin.NumberFormatException
 
 class SetCommand(plugin: DeathShift) : CommandExecutor {
     init {
@@ -27,12 +26,14 @@ class SetCommand(plugin: DeathShift) : CommandExecutor {
             return true
         }
 
-        var value: Any?
+        val value: Any?
         try {
             value = when (ConfigManager.get(path)) {
                 is Int -> valueRaw.toInt()
                 is Boolean -> valueRaw.lowercase().toBooleanStrict()
-                else -> { null }
+                else -> {
+                    null
+                }
             }
         } catch (err: Exception) {
             return when (err) {
@@ -40,6 +41,7 @@ class SetCommand(plugin: DeathShift) : CommandExecutor {
                     sender.sendMessage("Argument 2 needs to be an integer to be assigned to ${path}.")
                     true
                 }
+
                 else -> {
                     sender.sendMessage("Argument 2 needs to be true or false to be assigned to ${path}.")
                     true

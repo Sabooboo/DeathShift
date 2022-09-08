@@ -2,7 +2,6 @@ package com.sab.deathshift.managers
 
 import com.sab.deathshift.utilities.LocationTools
 import org.bukkit.GameMode
-import org.bukkit.Location
 import org.bukkit.entity.Player
 
 class PlayerManager(val player: Player) {
@@ -19,6 +18,7 @@ class PlayerManager(val player: Player) {
                 PlayerState.PLAYING -> {
                     return
                 }
+
                 PlayerState.READY, PlayerState.UNREADY -> {
                     GameManager.notifyReady(this)
                     return

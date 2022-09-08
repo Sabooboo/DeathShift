@@ -10,7 +10,7 @@ import org.bukkit.ChatColor
 import org.bukkit.scheduler.BukkitRunnable
 
 class StartTimer(private val plugin: DeathShift) : BukkitRunnable() {
-    var time = ConfigManager.countdown
+    private var time = ConfigManager.countdown
 
     override fun run() {
         if (time == 0) {

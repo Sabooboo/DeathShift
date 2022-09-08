@@ -1,9 +1,15 @@
 package com.sab.deathshift.managers
 
 import com.sab.deathshift.DeathShift
-import com.sab.deathshift.tasks.*
-import com.sab.deathshift.utilities.*
-import org.bukkit.*
+import com.sab.deathshift.tasks.StartTimer
+import com.sab.deathshift.tasks.TeleportTimer
+import com.sab.deathshift.utilities.Broadcast
+import com.sab.deathshift.utilities.GameSound
+import com.sab.deathshift.utilities.SoundUtil
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -23,7 +29,7 @@ object GameManager {
         if (state != GameState.STOPPED) return
         state = GameState.STARTING
         startTimer = StartTimer(plugin)
-        startTimer.runTaskTimer(plugin,20, 20)
+        startTimer.runTaskTimer(plugin, 20, 20)
     }
 
     private fun stopQueue() {
@@ -57,19 +63,20 @@ object GameManager {
         teleportTimer.cancel()
         if (players.size == 1) {
             Broadcast.all("${ChatColor.GOLD}${players[0].player.name.uppercase()} WINS!")
-        }
-        else {
+        } else {
             Broadcast.all("${ChatColor.YELLOW}The game has been stopped!")
         }
         SoundUtil.pingNonParticipants(GameSound.HIGH_PLING)
         for (p in Bukkit.getOnlinePlayers()) {
             p.gameMode = GameMode.CREATIVE
-            p.teleport(Location(
-                Bukkit.getWorld("world")!!,
-                0.toDouble(),
-                Bukkit.getWorld("world")!!.getHighestBlockAt(0, 0).y.toDouble() + 1,
-                0.toDouble()
-            ))
+            p.teleport(
+                Location(
+                    Bukkit.getWorld("world")!!,
+                    0.toDouble(),
+                    Bukkit.getWorld("world")!!.getHighestBlockAt(0, 0).y.toDouble() + 1,
+                    0.toDouble()
+                )
+            )
         }
         players = mutableListOf()
         state = GameState.STOPPED
@@ -80,7 +87,7 @@ object GameManager {
     }
 
     fun get(player: Player): PlayerManager? {
-        for(playerManager in players) {
+        for (playerManager in players) {
             if (player.uniqueId == playerManager.player.uniqueId) return playerManager
         }
         return null
